@@ -1,0 +1,5 @@
+---
+
+- hosts: riemann-servers
+  roles:
+    - riemann

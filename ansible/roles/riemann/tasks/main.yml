@@ -1,0 +1,42 @@
+---
+- name: Install Java 1.8
+  yum: name=java-1.8.0-openjdk.x86_64
+  become: true
+
+- name: Download Nomad
+  get_url: url=https://releases.hashicorp.com/nomad/0.5.0/nomad_0.5.0_linux_amd64.zip dest="{{ ansible_env.HOME}}/nomad_0.5.0_linux_amd64.zip"
+
+- name: Unpack Nomad
+  command: /usr/bin/unzip -o nomad_0.5.0_linux_amd64.zip
+
+- name: Download Consul
+  get_url: url=https://releases.hashicorp.com/consul/0.7.1/consul_0.7.1_linux_amd64.zip dest="{{ ansible_env.HOME}}/consul_0.7.1_linux_amd64.zip"
+
+- name: Unpack Consul
+  command: /usr/bin/unzip -o consul_0.7.1_linux_amd64.zip
+
+- name: Supervisor Config
+  template: src=supervisord.conf dest="{{ ansible_env.HOME}}/supervisord.conf"
+
+- name: Run Supervisor
+  command: "{{ ansible_env.HOME}}/py/supervisord -c {{ ansible_env.HOME}}/supervisord.conf"
+  ignore_errors: yes
+
+- name: Reread Supervisor Config
+  command: ./py/supervisorctl reread
+
+- name: Update Supervisor Config
+  command: ./py/supervisorctl update
+
+- name: Start consul
+  command: ./py/supervisorctl start consul
+
+- name: Start nomad
+  command: ./py/supervisorctl start nomad
+
+- name: Riemann config
+  copy: src=riemann.clj dest="{{ ansible_env.HOME}}/riemann.config"
+
+- name: Riemann Nomad
+  copy: src=riemann.nomad dest="{{ ansible_env.HOME}}/riemann.nomad"
+

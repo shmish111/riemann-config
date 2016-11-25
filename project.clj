@@ -6,7 +6,7 @@
 
   :plugins [[lein-cljfmt "0.3.0"]]
 
-  :profiles {:dev {:source-paths ["src"]
+  :profiles {:dev {:source-paths ["src" "ansible/roles/riemann/files"]
                    :dependencies [[cheshire "5.6.3"]]}}
 
   :aliases {"format" ["cljfmt" "fix"]})
