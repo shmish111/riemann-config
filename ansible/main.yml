@@ -1,5 +1,10 @@
 ---
 
 - hosts: riemann-servers
+  vars:
+    jenkins_repo_url: http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+    jenkins_repo_key_url: http://pkg.jenkins-ci.org/redhat-stable/jenkins-ci.org.key
   roles:
     - riemann
+    - name: geerlingguy.jenkins
+      become: yes
